@@ -21,9 +21,11 @@ app/
 components/
   ui/Button.tsx             — variant: primary|secondary|ghost, size: sm|md|lg, loading spinner
   ui/Modal.tsx              — backdrop + Escape key + aria-modal
-  editor/PhotoCell.tsx      — single grid cell, click=upload, right-click/long-press=zoom modal
+  editor/PhotoCell.tsx      — single grid cell, click=upload, right-click/long-press=zoom modal, drag-and-drop source/target
   editor/ZoomPanModal.tsx   — drag/pinch/scroll zoom+pan, Apply saves back to slot state
   editor/PosterGrid.tsx     — CSS Grid 5 cols × N rows, gap 2px, max-w 600px
+  editor/DragGhost.tsx      — semi-transparent floating thumbnail during drag operations
+  editor/useDragDrop.ts     — custom hook: HTML5 DnD + touch long-press drag, swap/move logic
   editor/OrderButton.tsx    — generates PNG → uploads to Storage → POST /api/orders
 
 lib/

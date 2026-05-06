@@ -2,17 +2,29 @@
 
 import { useRef } from "react";
 import type { PhotoSlot } from "@/lib/types";
+import type { CellDragProps } from "./useDragDrop";
 
 interface PhotoCellProps {
   slot: PhotoSlot;
   onFileSelected: (slotIndex: number, file: File) => void;
   onOpenZoomPan: (slotIndex: number) => void;
+  dragProps: CellDragProps;
+  isDragSource: boolean;
+  isDragOver: boolean;
 }
 
-export function PhotoCell({ slot, onFileSelected, onOpenZoomPan }: PhotoCellProps) {
+export function PhotoCell({
+  slot,
+  onFileSelected,
+  onOpenZoomPan,
+  dragProps,
+  isDragSource,
+  isDragOver,
+}: PhotoCellProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleClick() {
+    // Don't open zoom if we just finished a drag
     if (slot.previewUrl) {
       onOpenZoomPan(slot.slotIndex);
     } else {
@@ -28,9 +40,37 @@ export function PhotoCell({ slot, onFileSelected, onOpenZoomPan }: PhotoCellProp
 
   return (
     <div
+      data-slot-index={slot.slotIndex}
       className="aspect-square bg-cream overflow-hidden cursor-pointer select-none relative group"
       onClick={handleClick}
+      style={{
+        opacity: isDragSource ? 0.4 : 1,
+        transition: "opacity 150ms ease, box-shadow 150ms ease",
+        boxShadow: isDragOver
+          ? "inset 0 0 0 2px #2C2C2C"
+          : "none",
+      }}
+      draggable={dragProps.draggable}
+      onDragStart={dragProps.onDragStart}
+      onDragEnd={dragProps.onDragEnd}
+      onDragOver={dragProps.onDragOver}
+      onDragEnter={dragProps.onDragEnter}
+      onDragLeave={dragProps.onDragLeave}
+      onDrop={dragProps.onDrop}
+      onTouchStart={dragProps.onTouchStart}
+      onTouchMove={dragProps.onTouchMove}
+      onTouchEnd={dragProps.onTouchEnd}
     >
+      {/* Drop highlight overlay */}
+      {isDragOver && (
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background: "rgba(213, 232, 213, 0.35)",
+          }}
+        />
+      )}
+
       {slot.previewUrl ? (
         <>
           <img

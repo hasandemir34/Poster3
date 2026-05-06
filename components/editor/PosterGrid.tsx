@@ -2,8 +2,10 @@
 
 import { useState, useCallback } from "react";
 import type { PhotoSlot } from "@/lib/types";
-import { PhotoCell } from "./PhotoCell";
-import { ZoomPanModal } from "./ZoomPanModal";
+import { PhotoCell } from "@/components/editor/PhotoCell";
+import { ZoomPanModal } from "@/components/editor/ZoomPanModal";
+import { useDragDrop } from "@/components/editor/useDragDrop";
+import { DragGhost } from "@/components/editor/DragGhost";
 
 interface PosterGridProps {
   slots: PhotoSlot[];
@@ -14,6 +16,11 @@ export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
   const [zoomPanIndex, setZoomPanIndex] = useState<number | null>(null);
 
   const cols = 5;
+
+  const { state: dragState, getCellDragProps, ghostInfo } = useDragDrop(
+    slots,
+    onSlotsChange
+  );
 
   const handleFileSelected = useCallback(
     (slotIndex: number, file: File) => {
@@ -58,9 +65,17 @@ export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
             slot={slot}
             onFileSelected={handleFileSelected}
             onOpenZoomPan={setZoomPanIndex}
+            dragProps={getCellDragProps(slot.slotIndex, !!slot.previewUrl)}
+            isDragSource={dragState.dragSourceIndex === slot.slotIndex}
+            isDragOver={
+              dragState.dragOverIndex === slot.slotIndex &&
+              dragState.dragSourceIndex !== slot.slotIndex
+            }
           />
         ))}
       </div>
+
+      <DragGhost ghostInfo={ghostInfo} />
 
       <ZoomPanModal
         slot={activeSlot}
