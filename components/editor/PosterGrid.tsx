@@ -66,6 +66,7 @@ export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
         slot={activeSlot}
         onClose={() => setZoomPanIndex(null)}
         onSave={handleZoomPanSave}
+        onReplace={handleFileSelected}
       />
     </>
   );

@@ -9,16 +9,13 @@ interface PhotoCellProps {
   onOpenZoomPan: (slotIndex: number) => void;
 }
 
-export function PhotoCell({
-  slot,
-  onFileSelected,
-  onOpenZoomPan,
-}: PhotoCellProps) {
+export function PhotoCell({ slot, onFileSelected, onOpenZoomPan }: PhotoCellProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const longPressRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function handleClick() {
-    if (!slot.previewUrl) {
+    if (slot.previewUrl) {
+      onOpenZoomPan(slot.slotIndex);
+    } else {
       inputRef.current?.click();
     }
   }
@@ -29,31 +26,10 @@ export function PhotoCell({
     e.target.value = "";
   }
 
-  function handleContextMenu(e: React.MouseEvent) {
-    if (slot.previewUrl) {
-      e.preventDefault();
-      onOpenZoomPan(slot.slotIndex);
-    }
-  }
-
-  function handleTouchStart() {
-    longPressRef.current = setTimeout(() => {
-      if (slot.previewUrl) onOpenZoomPan(slot.slotIndex);
-    }, 500);
-  }
-
-  function handleTouchEnd() {
-    if (longPressRef.current) clearTimeout(longPressRef.current);
-  }
-
   return (
     <div
       className="aspect-square bg-cream overflow-hidden cursor-pointer select-none relative group"
       onClick={handleClick}
-      onContextMenu={handleContextMenu}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      onTouchCancel={handleTouchEnd}
     >
       {slot.previewUrl ? (
         <>
@@ -61,15 +37,15 @@ export function PhotoCell({
             src={slot.previewUrl}
             alt=""
             draggable={false}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover pointer-events-none"
             style={{
-              transform: `scale(${slot.zoom}) translate(${slot.panX}px, ${slot.panY}px)`,
+              transform: `scale(${slot.zoom}) translate(${slot.panX}%, ${slot.panY}%)`,
               transformOrigin: "center center",
             }}
           />
           <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors flex items-center justify-center">
             <span className="opacity-0 group-hover:opacity-100 transition-opacity text-off-white text-xs bg-charcoal/60 px-2 py-1 rounded-md">
-              Right-click to adjust
+              Tap to adjust
             </span>
           </div>
         </>

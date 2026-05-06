@@ -36,7 +36,7 @@ export default async function HomePage() {
                 Sign In
               </Link>
               <Link
-                href="/signup"
+                href="/editor"
                 className="px-5 py-2 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 transition-opacity"
               >
                 Get Started
@@ -57,7 +57,7 @@ export default async function HomePage() {
           pan each photo — then order your print.
         </p>
         <Link
-          href={user ? "/editor" : "/signup"}
+          href="/editor"
           className="inline-block mt-10 px-8 py-4 rounded-xl bg-charcoal text-off-white font-medium text-base hover:opacity-90 transition-opacity shadow-lift"
         >
           Create Your Poster
@@ -81,7 +81,7 @@ export default async function HomePage() {
                   ${p.price}
                 </p>
                 <Link
-                  href={user ? `/editor?product=${p.id}` : "/signup"}
+                  href={`/editor?product=${p.id}`}
                   className="inline-block mt-6 px-6 py-3 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 transition-opacity"
                 >
                   Start Creating
