@@ -10,9 +10,10 @@ import { DragGhost } from "@/components/editor/DragGhost";
 interface PosterGridProps {
   slots: PhotoSlot[];
   onSlotsChange: (slots: PhotoSlot[]) => void;
+  isZoomed?: boolean;
 }
 
-export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
+export function PosterGrid({ slots, onSlotsChange, isZoomed }: PosterGridProps) {
   const [zoomPanIndex, setZoomPanIndex] = useState<number | null>(null);
   const [isOverGrid, setIsOverGrid] = useState(false);
 
@@ -125,9 +126,9 @@ export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
           gap: "2px",
           height: "100%",
-          maxHeight: "100%",
+          maxHeight: isZoomed ? "none" : "100%",
           width: "auto",
-          maxWidth: "100%",
+          maxWidth: isZoomed ? "none" : "100%",
           aspectRatio: `5 / ${Math.ceil(slots.length / cols)}`,
           margin: "0 auto",
         }}
