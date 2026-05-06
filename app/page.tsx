@@ -25,7 +25,7 @@ export default async function HomePage() {
               href="/editor"
               className="px-5 py-2 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 transition-opacity"
             >
-              Open Editor
+              Editörü Aç
             </Link>
           ) : (
             <>
@@ -33,13 +33,13 @@ export default async function HomePage() {
                 href="/login"
                 className="px-5 py-2 rounded-lg text-charcoal text-sm font-medium hover:bg-cream transition-colors"
               >
-                Sign In
+                Giriş Yap
               </Link>
               <Link
                 href="/editor"
                 className="px-5 py-2 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 transition-opacity"
               >
-                Get Started
+                Hemen Başla
               </Link>
             </>
           )}
@@ -48,26 +48,26 @@ export default async function HomePage() {
 
       <section className="max-w-3xl mx-auto px-6 pt-24 pb-16 text-center">
         <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-charcoal leading-tight">
-          Your moments,
+          Anılarınız,
           <br />
-          <span className="text-muted">beautifully printed.</span>
+          <span className="text-muted">en güzel haliyle kağıtta.</span>
         </h1>
         <p className="mt-6 text-lg text-muted max-w-xl mx-auto leading-relaxed">
-          Build a 50- or 35-photo poster in minutes. Upload, arrange, zoom and
-          pan each photo — then order your print.
+          Dakikalar içinde 50 veya 35 fotoğraflık posterinizi oluşturun. Yükleyin, düzenleyin, yakınlaştırın ve
+          kaydırın — ardından siparişinizi verin.
         </p>
         <Link
           href="/editor"
           className="inline-block mt-10 px-8 py-4 rounded-xl bg-charcoal text-off-white font-medium text-base hover:opacity-90 transition-opacity shadow-lift"
         >
-          Create Your Poster
+          Posterini Oluştur
         </Link>
       </section>
 
       {products && products.length > 0 && (
         <section className="max-w-3xl mx-auto px-6 pb-24">
           <h2 className="text-center text-xl font-medium text-charcoal mb-8">
-            Choose your size
+            Boyutunuzu seçin
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {(products as Product[]).map((p) => (
@@ -75,16 +75,16 @@ export default async function HomePage() {
                 key={p.id}
                 className="rounded-2xl bg-cream border border-cream shadow-card p-8 text-center"
               >
-                <p className="text-lg font-semibold text-charcoal">{p.name}</p>
-                <p className="mt-1 text-muted text-sm">{p.photo_count} photos</p>
+                <p className="text-lg font-semibold text-charcoal">{p.name === 'Classic 50' ? 'Klasik 50' : p.name === 'Mini 35' ? 'Mini 35' : p.name}</p>
+                <p className="mt-1 text-muted text-sm">{p.photo_count} fotoğraf</p>
                 <p className="mt-4 text-3xl font-semibold text-charcoal">
-                  ${p.price}
+                  {p.price} TL
                 </p>
                 <Link
                   href={`/editor?product=${p.id}`}
                   className="inline-block mt-6 px-6 py-3 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 transition-opacity"
                 >
-                  Start Creating
+                  Oluşturmaya Başla
                 </Link>
               </div>
             ))}

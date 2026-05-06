@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Framely — Your Moments, Printed",
-  description: "Create beautiful photo poster collages, shipped to your door.",
+  title: "Framely — Anılarınız, Baskıda",
+  description: "Harika fotoğraflı poster kolajları oluşturun, kapınıza gelsin.",
   openGraph: {
     title: "Framely",
-    description: "Your Moments, Printed.",
+    description: "Anılarınız, Baskıda.",
     type: "website",
   },
 };
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="tr">
       <body className="bg-off-white text-charcoal font-sans antialiased">
         {children}
       </body>

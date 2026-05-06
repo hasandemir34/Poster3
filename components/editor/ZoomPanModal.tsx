@@ -122,7 +122,7 @@ export function ZoomPanModal({ slot, onClose, onSave, onReplace }: ZoomPanModalP
   }
 
   return (
-    <Modal open={!!slot} onClose={onClose} title="Adjust Photo">
+    <Modal open={!!slot} onClose={onClose} title="Fotoğrafı Ayarla">
       {slot?.previewUrl && (
         <div className="space-y-4">
           <div
@@ -149,7 +149,7 @@ export function ZoomPanModal({ slot, onClose, onSave, onReplace }: ZoomPanModalP
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs text-muted w-10">Zoom</span>
+            <span className="text-xs text-muted w-10">Ölçek</span>
             <input
               type="range"
               min="1"
@@ -171,22 +171,22 @@ export function ZoomPanModal({ slot, onClose, onSave, onReplace }: ZoomPanModalP
           </div>
 
           <p className="text-xs text-center text-muted">
-            Drag to pan · Pinch or scroll to zoom
+            Kaydırmak için sürükleyin · Yakınlaştırmak için kaydırın veya iki parmağınızla kıstırın
           </p>
 
           <div className="flex gap-2 pt-2">
             <Button variant="ghost" size="sm" onClick={handleReset}>
-              Reset
+              Sıfırla
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => replaceInputRef.current?.click()}
             >
-              Replace
+              Değiştir
             </Button>
             <Button variant="primary" size="sm" onClick={handleSave} className="flex-1">
-              Apply
+              Uygula
             </Button>
           </div>
 

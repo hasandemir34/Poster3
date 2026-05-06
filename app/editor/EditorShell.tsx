@@ -52,7 +52,7 @@ export function EditorShell({ product, allProducts }: EditorShellProps) {
                   : "bg-cream text-charcoal hover:bg-pastel-sage/40",
               ].join(" ")}
             >
-              {p.name}
+              {p.name === 'Classic 50' ? 'Klasik 50' : p.name === 'Mini 35' ? 'Mini 35' : p.name}
             </button>
           ))}
         </div>

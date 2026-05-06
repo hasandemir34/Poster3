@@ -85,7 +85,7 @@ export function PhotoCell({
           />
           <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors flex items-center justify-center">
             <span className="opacity-0 group-hover:opacity-100 transition-opacity text-off-white text-xs bg-charcoal/60 px-2 py-1 rounded-md">
-              Tap to adjust
+              Düzenlemek için tıkla
             </span>
           </div>
         </>
@@ -104,7 +104,7 @@ export function PhotoCell({
               d="M12 4v16m8-8H4"
             />
           </svg>
-          <span className="text-xs font-medium hidden sm:block">Add photo</span>
+          <span className="text-xs font-medium hidden sm:block">Fotoğraf ekle</span>
         </div>
       )}
 

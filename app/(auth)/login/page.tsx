@@ -39,13 +39,13 @@ function LoginForm() {
   return (
     <div className="bg-white rounded-2xl shadow-card p-8">
       <h1 className="text-xl font-semibold text-charcoal mb-6">
-        Welcome back
+        Tekrar hoş geldiniz
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-charcoal mb-1.5">
-            Email
+            E-posta
           </label>
           <input
             type="email"
@@ -53,13 +53,13 @@ function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-charcoal bg-off-white focus:outline-none focus:ring-2 focus:ring-charcoal/20 focus:border-charcoal transition-colors"
-            placeholder="you@example.com"
+            placeholder="sen@ornek.com"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-charcoal mb-1.5">
-            Password
+            Şifre
           </label>
           <input
             type="password"
@@ -82,7 +82,7 @@ function LoginForm() {
           disabled={loading}
           className="w-full py-3 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 disabled:opacity-60 transition-opacity"
         >
-          {loading ? "Signing in…" : "Sign In"}
+          {loading ? "Giriş yapılıyor…" : "Giriş Yap"}
         </button>
       </form>
     </div>
@@ -109,12 +109,12 @@ export default function LoginPage() {
         </Suspense>
 
         <p className="mt-5 text-center text-sm text-muted">
-          No account?{" "}
+          Hesabınız yok mu?{" "}
           <Link
             href="/signup"
             className="text-charcoal font-medium underline underline-offset-2"
           >
-            Create one
+            Hesap oluştur
           </Link>
         </p>
       </div>

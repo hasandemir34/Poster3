@@ -133,7 +133,7 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
         </Button>
         {!isReady && (
           <p className="text-xs text-muted">
-            {filledCount} / {product.photo_count} photos added
+            {filledCount} / {product.photo_count} fotoğraf eklendi
           </p>
         )}
       </div>
@@ -159,15 +159,15 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
       <Modal
         open={step === "error"}
         onClose={() => setStep("idle")}
-        title="Something went wrong"
+        title="Bir şeyler yanlış gitti"
       >
         <p className="text-sm text-muted mb-4">{errorMessage}</p>
-        <Button onClick={() => setStep("idle")}>Close</Button>
+        <Button onClick={() => setStep("idle")}>Kapat</Button>
       </Modal>
 
       {step === "done" && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-pastel-sage text-charcoal px-6 py-3 rounded-xl shadow-lift text-sm font-medium">
-          Order placed! Redirecting…
+          Sipariş alındı! Yönlendiriliyor…
         </div>
       )}
     </>
@@ -199,48 +199,49 @@ function AddressForm({ address, onChange, onSubmit }: AddressFormProps) {
       className="space-y-3"
     >
       <div>
-        <label className={labelClass}>Street Address</label>
+        <label className={labelClass}>Açık Adres</label>
         <input
           required
           className={inputClass}
           value={address.line1}
           onChange={field("line1")}
-          placeholder="123 Main St"
+          placeholder="Örn: Atatürk Mah. 123. Sok."
         />
       </div>
       <div>
-        <label className={labelClass}>Apt / Suite (optional)</label>
+        <label className={labelClass}>Bina / Kat / Daire (isteğe bağlı)</label>
         <input
           className={inputClass}
           value={address.line2 ?? ""}
           onChange={field("line2")}
-          placeholder="Apt 4B"
+          placeholder="No: 5 Daire: 4"
         />
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className={labelClass}>City</label>
+          <label className={labelClass}>Şehir</label>
           <input
             required
             className={inputClass}
             value={address.city}
             onChange={field("city")}
+            placeholder="İstanbul"
           />
         </div>
         <div>
-          <label className={labelClass}>State</label>
+          <label className={labelClass}>İlçe / Eyalet</label>
           <input
             required
             className={inputClass}
             value={address.state}
             onChange={field("state")}
-            placeholder="CA"
+            placeholder="Kadıköy"
           />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className={labelClass}>Postcode</label>
+          <label className={labelClass}>Posta Kodu</label>
           <input
             required
             className={inputClass}
@@ -249,17 +250,18 @@ function AddressForm({ address, onChange, onSubmit }: AddressFormProps) {
           />
         </div>
         <div>
-          <label className={labelClass}>Country</label>
+          <label className={labelClass}>Ülke</label>
           <input
             required
             className={inputClass}
             value={address.country}
             onChange={field("country")}
+            placeholder="Türkiye"
           />
         </div>
       </div>
       <Button type="submit" size="lg" className="w-full mt-2">
-        Confirm &amp; Generate Print
+        Onayla ve Baskıyı Hazırla
       </Button>
     </form>
   );

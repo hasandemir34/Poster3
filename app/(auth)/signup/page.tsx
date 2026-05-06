@@ -42,17 +42,16 @@ export default function SignupPage() {
         <div className="w-full max-w-sm text-center">
           <div className="text-4xl mb-4">✉️</div>
           <h1 className="text-xl font-semibold text-charcoal">
-            Check your email
+            E-postanızı kontrol edin
           </h1>
           <p className="mt-2 text-muted text-sm">
-            We sent a confirmation link to <strong>{email}</strong>. Click it to
-            activate your account.
+            Doğrulama bağlantısını şu adrese gönderdik: <strong>{email}</strong>. Hesabınızı aktif etmek için bağlantıya tıklayın.
           </p>
           <Link
             href="/login"
             className="inline-block mt-6 text-sm text-charcoal underline"
           >
-            Back to sign in
+            Giriş sayfasına dön
           </Link>
         </div>
       </main>
@@ -71,13 +70,13 @@ export default function SignupPage() {
 
         <div className="bg-white rounded-2xl shadow-card p-8">
           <h1 className="text-xl font-semibold text-charcoal mb-6">
-            Create your account
+            Hesabınızı oluşturun
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">
-                Full Name
+                Ad Soyad
               </label>
               <input
                 type="text"
@@ -85,13 +84,13 @@ export default function SignupPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-charcoal bg-off-white focus:outline-none focus:ring-2 focus:ring-charcoal/20 focus:border-charcoal transition-colors"
-                placeholder="Jane Smith"
+                placeholder="Ada Lovelace"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">
-                Email
+                E-posta
               </label>
               <input
                 type="email"
@@ -99,13 +98,13 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-charcoal bg-off-white focus:outline-none focus:ring-2 focus:ring-charcoal/20 focus:border-charcoal transition-colors"
-                placeholder="you@example.com"
+                placeholder="sen@ornek.com"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">
-                Password
+                Şifre
               </label>
               <input
                 type="password"
@@ -114,7 +113,7 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-charcoal bg-off-white focus:outline-none focus:ring-2 focus:ring-charcoal/20 focus:border-charcoal transition-colors"
-                placeholder="Min. 8 characters"
+                placeholder="En az 8 karakter"
               />
             </div>
 
@@ -129,18 +128,18 @@ export default function SignupPage() {
               disabled={loading}
               className="w-full py-3 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 disabled:opacity-60 transition-opacity"
             >
-              {loading ? "Creating account…" : "Create Account"}
+              {loading ? "Hesap oluşturuluyor…" : "Hesap Oluştur"}
             </button>
           </form>
         </div>
 
         <p className="mt-5 text-center text-sm text-muted">
-          Already have an account?{" "}
+          Zaten hesabınız var mı?{" "}
           <Link
             href="/login"
             className="text-charcoal font-medium underline underline-offset-2"
           >
-            Sign in
+            Giriş yap
           </Link>
         </p>
       </div>
