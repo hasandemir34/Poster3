@@ -14,6 +14,7 @@ interface PosterGridProps {
 
 export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
   const [zoomPanIndex, setZoomPanIndex] = useState<number | null>(null);
+  const [isOverGrid, setIsOverGrid] = useState(false);
 
   const cols = 5;
 
@@ -45,12 +46,67 @@ export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
     [slots, onSlotsChange]
   );
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.types.includes("Files")) {
+      setIsOverGrid(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOverGrid(false);
+  };
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsOverGrid(false);
+
+      const files = Array.from(e.dataTransfer.files).filter((file) =>
+        file.type.startsWith("image/")
+      );
+
+      if (files.length === 0) return;
+
+      const newSlots = [...slots];
+      let fileIndex = 0;
+
+      for (let i = 0; i < newSlots.length && fileIndex < files.length; i++) {
+        if (!newSlots[i].file) {
+          const file = files[fileIndex];
+          newSlots[i] = {
+            ...newSlots[i],
+            file,
+            previewUrl: URL.createObjectURL(file),
+            zoom: 1,
+            panX: 0,
+            panY: 0,
+          };
+          fileIndex++;
+        }
+      }
+
+      onSlotsChange(newSlots);
+    },
+    [slots, onSlotsChange]
+  );
+
   const activeSlot = zoomPanIndex !== null ? slots[zoomPanIndex] : null;
 
   return (
     <>
       <div
         id="poster-grid"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={`transition-all duration-300 ${
+          isOverGrid ? "ring-4 ring-pastel-sage ring-offset-4 ring-offset-off-white scale-[1.02] rounded-sm" : ""
+        }`}
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
