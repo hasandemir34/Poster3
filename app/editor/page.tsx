@@ -34,7 +34,6 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
     <main className="min-h-screen bg-off-white">
       <EditorShell
         product={selectedProduct}
-        allProducts={products}
         isLoggedIn={!!user}
       />
     </main>

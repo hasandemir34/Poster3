@@ -55,3 +55,10 @@ export interface CreateOrderResponse {
   orderId: string;
   error?: string;
 }
+export interface OrderWithItems extends Order {
+  order_items: OrderItemWithProduct[];
+}
+
+export interface OrderItemWithProduct extends OrderItem {
+  products: Product;
+}

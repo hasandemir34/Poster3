@@ -54,14 +54,21 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
         },
       });
       if (error) {
-        setError(error.message);
+        let msg = error.message;
+        if (msg.includes("User already registered")) {
+          msg = "Bu e-posta adresi zaten kullanımda.";
+        } else if (msg.includes("Signup is disabled")) {
+          msg = "Kayıt işlemi şu an kapalı.";
+        } else {
+          msg = "Kayıt olurken bir hata oluştu: " + msg;
+        }
+        setError(msg);
         setLoading(false);
         return;
       }
-      // Auto-login after signup (Supabase confirms immediately in dev or if email confirm is off)
+      // Auto-login after signup
       const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
       if (loginError) {
-        // Confirmation email sent — show message
         setError("Hesabını doğrulamak için e-postanı kontrol et, ardından tekrar giriş yap.");
         setLoading(false);
         return;
@@ -69,7 +76,15 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        setError(error.message);
+        let msg = error.message;
+        if (msg.includes("Invalid login credentials")) {
+          msg = "E-posta veya şifre hatalı.";
+        } else if (msg.includes("Email not confirmed")) {
+          msg = "Lütfen e-posta adresinizi doğrulayın.";
+        } else {
+          msg = "Giriş yapılırken bir hata oluştu: " + msg;
+        }
+        setError(msg);
         setLoading(false);
         return;
       }

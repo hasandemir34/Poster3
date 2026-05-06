@@ -26,12 +26,6 @@ export default async function HomePage() {
         <div className="flex gap-3">
           {user ? (
             <>
-              <Link
-                href="/editor"
-                className="px-5 py-2 rounded-lg text-charcoal text-sm font-medium hover:bg-cream transition-colors"
-              >
-                Editörü Aç
-              </Link>
               <LogoutButton />
               <Link
                 href="/profile"

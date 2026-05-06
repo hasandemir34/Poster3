@@ -21,13 +21,11 @@ function initSlots(count: number): PhotoSlot[] {
 
 interface EditorShellProps {
   product: Product;
-  allProducts: Product[];
   isLoggedIn?: boolean;
 }
 
 export function EditorShell({
   product,
-  allProducts,
   isLoggedIn,
 }: EditorShellProps) {
   const router = useRouter();
@@ -35,11 +33,6 @@ export function EditorShell({
   const [slots, setSlots] = useState<PhotoSlot[]>(() =>
     initSlots(product.photo_count)
   );
-
-  function handleProductSwitch(p: Product) {
-    setSlots(initSlots(p.photo_count));
-    router.push(`/editor?product=${p.id}`);
-  }
 
   const handleBulkUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -128,25 +121,6 @@ export function EditorShell({
             className="hidden"
             onChange={handleBulkUpload}
           />
-          <div className="h-4 w-[1px] bg-charcoal/10 mx-2" />
-          {allProducts.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => handleProductSwitch(p)}
-              className={[
-                "px-4 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                p.id === product.id
-                  ? "bg-charcoal text-off-white"
-                  : "bg-cream text-charcoal hover:bg-pastel-sage/40",
-              ].join(" ")}
-            >
-              {p.name === "Classic 50"
-                ? "Klasik 50"
-                : p.name === "Mini 35"
-                ? "Mini 35"
-                : p.name}
-            </button>
-          ))}
         </div>
       </div>
 
