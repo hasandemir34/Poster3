@@ -3,8 +3,8 @@ import { EditorShell } from "./EditorShell";
 import type { Product } from "@/lib/types";
 
 const FALLBACK_PRODUCTS: Product[] = [
-  { id: "classic", name: "Classic", price: 50, photo_count: 50 },
-  { id: "mini", name: "Mini", price: 35, photo_count: 35 },
+  { id: "classic", name: "Classic", price: 50, photo_count: 50, cols: 5 },
+  { id: "mini", name: "Mini", price: 35, photo_count: 9, cols: 3 },
 ];
 
 interface EditorPageProps {

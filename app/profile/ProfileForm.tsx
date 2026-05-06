@@ -8,10 +8,11 @@ import type { Profile, AddressJson } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
 
 interface ProfileFormProps {
-  profile: Profile;
+  profile: Profile | null;
+  userId: string;
 }
 
-export function ProfileForm({ profile }: ProfileFormProps) {
+export function ProfileForm({ profile, userId }: ProfileFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState(profile?.full_name || "");
@@ -34,11 +35,11 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     const supabase = createClient();
     const { error } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        id: userId,
         full_name: fullName,
         address_json: address,
-      })
-      .eq("id", profile.id);
+      });
 
     if (error) {
       setMessage({ type: "error", text: "Güncellenirken bir hata oluştu: " + error.message });

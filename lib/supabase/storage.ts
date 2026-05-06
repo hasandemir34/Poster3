@@ -6,19 +6,25 @@ import { createClient } from "./client";
  */
 export async function uploadPoster(userId: string, blob: Blob): Promise<string> {
   const supabase = createClient();
-  const fileName = `${userId}/${Date.now()}.png`;
+  const fileName = `${userId}/${Date.now()}.jpg`;
 
-  const { error: uploadError } = await supabase.storage
+  const uploadPromise = supabase.storage
     .from("posters")
     .upload(fileName, blob, {
-      contentType: "image/png",
+      contentType: "image/jpeg",
       cacheControl: "3600",
       upsert: false,
     });
 
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error("Yükleme zaman aşımına uğradı. Lütfen tekrar deneyin.")), 30_000)
+  );
+
+  const { error: uploadError } = await Promise.race([uploadPromise, timeoutPromise]);
+
   if (uploadError) {
     console.error("Upload error:", uploadError);
-    throw new Error("Baskı dosyası yüklenirken bir hata oluştu.");
+    throw new Error(`Baskı dosyası yüklenirken bir hata oluştu: ${uploadError.message}`);
   }
 
   const { data: urlData } = supabase.storage

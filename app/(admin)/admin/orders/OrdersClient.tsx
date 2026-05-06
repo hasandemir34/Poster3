@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Download, MapPin } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Download } from "lucide-react";
 import { updateOrderStatus } from "./actions";
+import { createClient } from "@/lib/supabase/client";
 import type { AdminOrder } from "./page";
 import type { AddressJson } from "@/lib/types";
 
@@ -52,12 +54,29 @@ function formatDate(iso: string) {
 }
 
 export default function OrdersClient({ orders }: { orders: AdminOrder[] }) {
+  const router = useRouter();
   const [statuses, setStatuses] = useState<Record<string, string>>(
     Object.fromEntries(orders.map((o) => [o.id, o.status]))
   );
   const [savingId, setSavingId] = useState<string | null>(null);
-  const [addressOpen, setAddressOpen] = useState<string | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [newOrderAlert, setNewOrderAlert] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel("admin-orders")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "orders" },
+        () => {
+          setNewOrderAlert(true);
+          router.refresh();
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [router]);
 
   async function handleStatusChange(orderId: string, next: string) {
     const prev = statuses[orderId];
@@ -96,6 +115,18 @@ export default function OrdersClient({ orders }: { orders: AdminOrder[] }) {
   }
 
   return (
+    <>
+      {newOrderAlert && (
+        <div className="flex items-center justify-between bg-pastel-sage text-charcoal px-5 py-3 rounded-xl shadow-subtle text-sm font-medium mb-2">
+          <span>🔔 Yeni sipariş geldi!</span>
+          <button
+            onClick={() => setNewOrderAlert(false)}
+            className="text-xs text-muted hover:text-charcoal ml-4"
+          >
+            Kapat
+          </button>
+        </div>
+      )}
     <div className="overflow-x-auto rounded-xl shadow-card bg-white">
       <table className="w-full text-sm text-charcoal">
         <thead>
@@ -144,24 +175,11 @@ export default function OrdersClient({ orders }: { orders: AdminOrder[] }) {
                 <td className="px-4 py-3 text-sm">{order.preset_name}</td>
 
                 {/* Address */}
-                <td className="px-4 py-3 relative">
+                <td className="px-4 py-3 max-w-[200px]">
                   {order.address ? (
-                    <>
-                      <button
-                        onClick={() =>
-                          setAddressOpen(addressOpen === order.id ? null : order.id)
-                        }
-                        className="flex items-center gap-1 text-xs text-muted hover:text-charcoal transition-colors"
-                      >
-                        <MapPin size={12} />
-                        {addressOpen === order.id ? "Gizle" : "Göster"}
-                      </button>
-                      {addressOpen === order.id && (
-                        <div className="absolute z-20 left-0 top-8 bg-white border border-gray-200 rounded-lg shadow-modal p-3 w-60 text-xs text-charcoal leading-relaxed">
-                          {formatAddress(order.address)}
-                        </div>
-                      )}
-                    </>
+                    <span className="text-xs text-charcoal leading-relaxed">
+                      {formatAddress(order.address)}
+                    </span>
                   ) : (
                     <span className="text-muted text-xs">—</span>
                   )}
@@ -204,5 +222,6 @@ export default function OrdersClient({ orders }: { orders: AdminOrder[] }) {
         </tbody>
       </table>
     </div>
+    </>
   );
 }

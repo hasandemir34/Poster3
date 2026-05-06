@@ -185,13 +185,13 @@ export function EditorShell({ product }: EditorShellProps) {
       {isZoomed ? (
         <div className="flex-none py-10 flex justify-center">
           <div style={{ height: "1200px" }}>
-            <PosterGrid slots={slots} onSlotsChange={setSlots} isZoomed={true} />
+            <PosterGrid slots={slots} onSlotsChange={setSlots} cols={product.cols} isZoomed={true} />
           </div>
         </div>
       ) : (
         <div className="flex-1 flex items-center justify-center min-h-0 min-w-0">
           <div className="h-full w-full flex items-center justify-center">
-            <PosterGrid slots={slots} onSlotsChange={setSlots} isZoomed={false} />
+            <PosterGrid slots={slots} onSlotsChange={setSlots} cols={product.cols} isZoomed={false} />
           </div>
         </div>
       )}

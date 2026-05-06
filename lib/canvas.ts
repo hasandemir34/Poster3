@@ -6,7 +6,7 @@ import type { PhotoSlot } from "@/lib/types";
  * We maximize resolution by keeping the largest dimension around 8000px,
  * which is a safe limit for most modern browsers/devices.
  */
-const MAX_SAFE_DIMENSION = 8000;
+const MAX_SAFE_DIMENSION = 3000;
 const CELL_GAP = 4;
 
 export async function generatePosterPng(
@@ -76,7 +76,7 @@ export async function generatePosterPng(
     })
   );
 
-  return canvas.convertToBlob({ type: "image/png", quality: 1.0 });
+  return canvas.convertToBlob({ type: "image/jpeg", quality: 0.95 });
 }
 
 async function loadImageBitmap(url: string): Promise<ImageBitmap> {

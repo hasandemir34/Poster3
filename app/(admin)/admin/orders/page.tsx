@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import OrdersClient from "./OrdersClient";
+import { LogoutButton } from "@/components/ui/LogoutButton";
 import type { AddressJson } from "@/lib/types";
 
 const ADMIN_EMAIL = "demirhasan0108@gmail.com";
@@ -68,7 +69,10 @@ export default async function AdminOrdersPage() {
   return (
     <main className="min-h-screen bg-off-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        <h1 className="text-2xl font-semibold text-charcoal">Admin — Siparişler</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold text-charcoal">Admin — Siparişler</h1>
+          <LogoutButton />
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

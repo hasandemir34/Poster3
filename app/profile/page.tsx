@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ProfileForm } from "@/app/profile/ProfileForm";
 import { OrderHistory } from "@/components/profile/OrderHistory";
+import { LogoutButton } from "@/components/ui/LogoutButton";
 import type { Profile, OrderWithItems } from "@/lib/types";
 
 export default async function ProfilePage() {
@@ -34,24 +35,32 @@ export default async function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-off-white pb-20">
-      <nav className="flex items-center justify-between px-6 py-5 max-w-5xl mx-auto mb-10">
-        <Link href="/" className="text-2xl font-semibold tracking-tight text-charcoal hover:opacity-80 transition-opacity">
-          Framely
+      <nav className="flex items-center justify-between px-6 py-5 max-w-xl mx-auto">
+        <Link href="/" className="flex items-center gap-2 text-sm font-medium text-charcoal hover:opacity-70 transition-opacity">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Ana Sayfaya Dön
         </Link>
-        <Link 
-          href="/"
-          className="px-5 py-2 rounded-lg text-charcoal text-sm font-medium hover:bg-cream transition-colors"
-        >
-          Ana Sayfa
-        </Link>
+        <LogoutButton />
       </nav>
 
-      <div className="max-w-xl mx-auto px-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold text-charcoal">Profilim</h1>
-          <p className="text-muted mt-2">
-            Hesap bilgilerinizi ve sipariş geçmişinizi buradan takip edebilirsiniz.
-          </p>
+      <div className="max-w-xl mx-auto px-6 mt-4">
+
+        {/* Kullanıcı bilgi kartı */}
+        <div className="bg-white rounded-2xl shadow-card p-6 flex items-center gap-4 mb-10">
+          <div className="w-14 h-14 rounded-full bg-cream flex items-center justify-center text-2xl font-semibold text-charcoal select-none shrink-0">
+            {((profile as Profile)?.full_name ?? user.email ?? "?")[0].toUpperCase()}
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-charcoal text-lg leading-tight truncate">
+              {(profile as Profile)?.full_name ?? "—"}
+            </p>
+            <p className="text-sm text-muted truncate">{user.email}</p>
+            <p className="text-xs text-muted mt-0.5">
+              Üyelik: {new Date(user.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
+            </p>
+          </div>
         </div>
 
         <div className="space-y-12">
@@ -63,7 +72,7 @@ export default async function ProfilePage() {
               Hesap Bilgileri
             </h2>
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-              <ProfileForm profile={profile as Profile} />
+              <ProfileForm profile={profile as Profile | null} userId={user.id} />
             </div>
           </section>
 

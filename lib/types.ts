@@ -19,6 +19,7 @@ export interface Product {
   name: string;
   price: number;
   photo_count: number;
+  cols: number;
 }
 
 export interface Order {

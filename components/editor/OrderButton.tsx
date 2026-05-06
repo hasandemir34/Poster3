@@ -42,6 +42,22 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
   const filledCount = slots.filter((s) => s.previewUrl).length;
   const isReady = filledCount === product.photo_count;
 
+  async function fetchSavedAddress() {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("address_json")
+      .eq("id", user.id)
+      .single();
+    if (profile?.address_json) {
+      setAddress(profile.address_json as AddressJson);
+    }
+  }
+
   async function handleOrderClick() {
     const supabase = createClient();
     const {
@@ -52,17 +68,7 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
       return;
     }
 
-    // Fetch profile to pre-fill address
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("address_json")
-      .eq("id", user.id)
-      .single();
-
-    if (profile?.address_json) {
-      setAddress(profile.address_json as AddressJson);
-    }
-
+    await fetchSavedAddress();
     setStep("address");
   }
 
@@ -70,7 +76,7 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
     setStep("generating");
 
     try {
-      const cols = 5;
+      const cols = product.cols;
       const rows = product.photo_count / cols;
       const blob = await generatePosterPng(slots, cols, rows);
 
@@ -145,7 +151,10 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
       <AuthModal
         open={step === "auth"}
         onClose={() => setStep("idle")}
-        onSuccess={() => setStep("address")}
+        onSuccess={async () => {
+          await fetchSavedAddress();
+          setStep("address");
+        }}
       />
 
       <Modal
@@ -170,8 +179,19 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
       </Modal>
 
       {step === "done" && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-pastel-sage text-charcoal px-6 py-3 rounded-xl shadow-lift text-sm font-medium">
-          Sipariş alındı! Yönlendiriliyor…
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-modal px-10 py-10 flex flex-col items-center gap-4 max-w-sm w-full mx-4 text-center animate-fade-in">
+            <div className="w-16 h-16 rounded-full bg-pastel-sage flex items-center justify-center">
+              <svg className="w-8 h-8 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-semibold text-charcoal">Siparişiniz Alındı!</h2>
+            <p className="text-sm text-muted leading-relaxed">
+              Posteriniz hazırlanmaya başlandı. Siparişinizin durumunu profilinizden takip edebilirsiniz.
+            </p>
+            <p className="text-xs text-muted">Ana sayfaya yönlendiriliyorsunuz…</p>
+          </div>
         </div>
       )}
     </>
