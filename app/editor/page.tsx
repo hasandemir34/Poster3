@@ -15,10 +15,6 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
   const { product: productId } = await searchParams;
   const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { data } = await supabase
     .from("products")
     .select("*")
@@ -32,10 +28,7 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
 
   return (
     <main className="bg-off-white">
-      <EditorShell
-        product={selectedProduct}
-        isLoggedIn={!!user}
-      />
+      <EditorShell product={selectedProduct} />
     </main>
   );
 }

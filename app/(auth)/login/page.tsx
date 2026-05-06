@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+const ADMIN_EMAIL = "demirhasan0108@gmail.com";
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -32,7 +34,8 @@ function LoginForm() {
       return;
     }
 
-    router.push(redirectTo);
+    const destination = email.trim().toLowerCase() === ADMIN_EMAIL ? "/admin/orders" : redirectTo;
+    router.push(destination);
     router.refresh();
   }
 
