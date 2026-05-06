@@ -30,7 +30,7 @@ const EMPTY_ADDRESS: AddressJson = {
   city: "",
   state: "",
   postcode: "",
-  country: "US",
+  country: "TR",
 };
 
 export function OrderButton({ product, slots }: OrderButtonProps) {
@@ -44,11 +44,25 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
 
   async function handleOrderClick() {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       setStep("auth");
       return;
     }
+
+    // Fetch profile to pre-fill address
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("address_json")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.address_json) {
+      setAddress(profile.address_json as AddressJson);
+    }
+
     setStep("address");
   }
 
@@ -229,7 +243,7 @@ function AddressForm({ address, onChange, onSubmit }: AddressFormProps) {
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3">
         <div>
           <label className={labelClass}>Posta Kodu</label>
           <input
@@ -237,16 +251,6 @@ function AddressForm({ address, onChange, onSubmit }: AddressFormProps) {
             className={inputClass}
             value={address.postcode}
             onChange={field("postcode")}
-          />
-        </div>
-        <div>
-          <label className={labelClass}>Ülke</label>
-          <input
-            required
-            className={inputClass}
-            value={address.country}
-            onChange={field("country")}
-            placeholder="Türkiye"
           />
         </div>
       </div>

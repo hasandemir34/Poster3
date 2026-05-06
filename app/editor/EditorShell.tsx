@@ -77,7 +77,30 @@ export function EditorShell({
           Framely
         </Link>
         <div className="flex gap-2 items-center">
-          {isLoggedIn && <LogoutButton />}
+          {isLoggedIn && (
+            <>
+              <LogoutButton />
+              <Link
+                href="/profile"
+                className="px-4 py-1.5 rounded-lg text-sm font-medium bg-charcoal text-off-white hover:opacity-90 transition-opacity flex items-center gap-2"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                Profilim
+              </Link>
+            </>
+          )}
           <button
             onClick={() => fileInputRef.current?.click()}
             className="mr-2 px-4 py-1.5 rounded-lg text-sm font-medium bg-pastel-sage text-charcoal hover:bg-pastel-sage/80 transition-colors flex items-center gap-2"
