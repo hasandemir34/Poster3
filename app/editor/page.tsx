@@ -31,7 +31,7 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
     (productId && products.find((p) => p.id === productId)) || products[0];
 
   return (
-    <main className="min-h-screen bg-off-white">
+    <main className="bg-off-white">
       <EditorShell
         product={selectedProduct}
         isLoggedIn={!!user}

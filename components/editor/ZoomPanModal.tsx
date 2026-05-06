@@ -9,15 +9,14 @@ interface ZoomPanModalProps {
   slot: PhotoSlot | null;
   onClose: () => void;
   onSave: (slotIndex: number, zoom: number, panX: number, panY: number) => void;
-  onReplace: (slotIndex: number, file: File) => void;
+  onRemove: (slotIndex: number) => void;
 }
 
-export function ZoomPanModal({ slot, onClose, onSave, onReplace }: ZoomPanModalProps) {
+export function ZoomPanModal({ slot, onClose, onSave, onRemove }: ZoomPanModalProps) {
   const [zoom, setZoom] = useState(1);
   const [panX, setPanX] = useState(0);
   const [panY, setPanY] = useState(0);
 
-  const replaceInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{
     startX: number;
@@ -112,13 +111,10 @@ export function ZoomPanModal({ slot, onClose, onSave, onReplace }: ZoomPanModalP
     setPanY(0);
   }
 
-  function handleReplaceFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file && slot) {
-      onReplace(slot.slotIndex, file);
-      onClose();
-    }
-    e.target.value = "";
+  function handleRemove() {
+    if (!slot) return;
+    onRemove(slot.slotIndex);
+    onClose();
   }
 
   return (
@@ -181,22 +177,15 @@ export function ZoomPanModal({ slot, onClose, onSave, onReplace }: ZoomPanModalP
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => replaceInputRef.current?.click()}
+              onClick={handleRemove}
+              className="text-red-500 hover:text-red-600 hover:bg-red-50"
             >
-              Değiştir
+              Kaldır
             </Button>
             <Button variant="primary" size="sm" onClick={handleSave} className="flex-1">
               Uygula
             </Button>
           </div>
-
-          <input
-            ref={replaceInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/heic"
-            className="hidden"
-            onChange={handleReplaceFile}
-          />
         </div>
       )}
     </Modal>

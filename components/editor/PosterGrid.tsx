@@ -95,6 +95,19 @@ export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
     [slots, onSlotsChange]
   );
 
+  const handleRemove = useCallback(
+    (slotIndex: number) => {
+      onSlotsChange(
+        slots.map((s) =>
+          s.slotIndex === slotIndex
+            ? { ...s, file: null, previewUrl: null, zoom: 1, panX: 0, panY: 0 }
+            : s
+        )
+      );
+    },
+    [slots, onSlotsChange]
+  );
+
   const activeSlot = zoomPanIndex !== null ? slots[zoomPanIndex] : null;
 
   return (
@@ -111,8 +124,12 @@ export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
           gap: "2px",
-          width: "100%",
-          maxWidth: "600px",
+          height: "100%",
+          maxHeight: "100%",
+          width: "auto",
+          maxWidth: "100%",
+          aspectRatio: `5 / ${Math.ceil(slots.length / cols)}`,
+          margin: "0 auto",
         }}
       >
         {slots.map((slot) => (
@@ -137,7 +154,7 @@ export function PosterGrid({ slots, onSlotsChange }: PosterGridProps) {
         slot={activeSlot}
         onClose={() => setZoomPanIndex(null)}
         onSave={handleZoomPanSave}
-        onReplace={handleFileSelected}
+        onRemove={handleRemove}
       />
     </>
   );

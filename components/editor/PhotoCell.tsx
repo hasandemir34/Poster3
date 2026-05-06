@@ -84,15 +84,17 @@ export function PhotoCell({
             }}
           />
           <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors flex items-center justify-center">
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity text-off-white text-xs bg-charcoal/60 px-2 py-1 rounded-md">
-              Düzenlemek için tıkla
-            </span>
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-charcoal/60 p-1.5 rounded-full text-off-white">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+            </div>
           </div>
         </>
       ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center text-muted/50 hover:text-muted transition-colors">
+        <div className="w-full h-full flex flex-col items-center justify-center text-muted/30 hover:text-muted/60 transition-colors">
           <svg
-            className="w-6 h-6 mb-1"
+            className="w-5 h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -101,10 +103,9 @@ export function PhotoCell({
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={1.5}
-              d="M12 4v16m8-8H4"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
             />
           </svg>
-          <span className="text-xs font-medium hidden sm:block">Fotoğraf ekle</span>
         </div>
       )}
 

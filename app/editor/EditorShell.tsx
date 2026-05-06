@@ -63,9 +63,42 @@ export function EditorShell({
     }
   };
 
+  const handleShuffle = () => {
+    // Get all photos from current slots
+    const photos = slots
+      .filter((s) => s.previewUrl)
+      .map((s) => ({
+        file: s.file,
+        previewUrl: s.previewUrl,
+        zoom: s.zoom,
+        panX: s.panX,
+        panY: s.panY,
+      }));
+
+    if (photos.length === 0) return;
+
+    // Get all possible indices and shuffle them
+    const allIndices = Array.from({ length: slots.length }, (_, i) => i);
+    const shuffledIndices = [...allIndices].sort(() => Math.random() - 0.5);
+
+    // Create new slots, all empty initially
+    const newSlots = initSlots(slots.length);
+
+    // Place photos into the first N shuffled indices
+    photos.forEach((photo, i) => {
+      const targetIdx = shuffledIndices[i];
+      newSlots[targetIdx] = {
+        ...newSlots[targetIdx],
+        ...photo,
+      };
+    });
+
+    setSlots(newSlots);
+  };
+
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="h-[100dvh] flex flex-col max-w-4xl mx-auto px-4 py-2 overflow-hidden">
+      <div className="flex-none flex items-center justify-between mb-2">
         <Link href="/" className="text-xl font-semibold text-charcoal">
           Framely
         </Link>
@@ -95,8 +128,28 @@ export function EditorShell({
             </>
           )}
           <button
+            onClick={handleShuffle}
+            title="Fotoğrafları Karıştır"
+            className="px-4 py-1.5 rounded-lg text-sm font-medium bg-cream text-charcoal hover:bg-pastel-sage/40 transition-colors flex items-center gap-2"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            Karıştır
+          </button>
+          <button
             onClick={() => fileInputRef.current?.click()}
-            className="mr-2 px-4 py-1.5 rounded-lg text-sm font-medium bg-pastel-sage text-charcoal hover:bg-pastel-sage/80 transition-colors flex items-center gap-2"
+            className="px-4 py-1.5 rounded-lg text-sm font-medium bg-pastel-sage text-charcoal hover:bg-pastel-sage/80 transition-colors flex items-center gap-2"
           >
             <svg
               className="w-4 h-4"
@@ -124,12 +177,14 @@ export function EditorShell({
         </div>
       </div>
 
-      <div className="flex justify-center mb-8">
+      <div className="flex-1 flex items-center justify-center min-h-0 min-w-0">
         <PosterGrid slots={slots} onSlotsChange={setSlots} />
       </div>
 
-      <div className="flex justify-center">
-        <OrderButton product={product} slots={slots} />
+      <div className="flex-none pt-2 pb-1">
+        <div className="flex justify-center">
+          <OrderButton product={product} slots={slots} />
+        </div>
       </div>
     </div>
   );
