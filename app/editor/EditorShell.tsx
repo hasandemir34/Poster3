@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { Product, PhotoSlot } from "@/lib/types";
 import { PosterGrid } from "@/components/editor/PosterGrid";
 import { OrderButton } from "@/components/editor/OrderButton";
+import { LogoutButton } from "@/components/ui/LogoutButton";
 
 function initSlots(count: number): PhotoSlot[] {
   return Array.from({ length: count }, (_, i) => ({
@@ -21,9 +22,14 @@ function initSlots(count: number): PhotoSlot[] {
 interface EditorShellProps {
   product: Product;
   allProducts: Product[];
+  isLoggedIn?: boolean;
 }
 
-export function EditorShell({ product, allProducts }: EditorShellProps) {
+export function EditorShell({
+  product,
+  allProducts,
+  isLoggedIn,
+}: EditorShellProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [slots, setSlots] = useState<PhotoSlot[]>(() =>
@@ -71,6 +77,7 @@ export function EditorShell({ product, allProducts }: EditorShellProps) {
           Framely
         </Link>
         <div className="flex gap-2 items-center">
+          {isLoggedIn && <LogoutButton />}
           <button
             onClick={() => fileInputRef.current?.click()}
             className="mr-2 px-4 py-1.5 rounded-lg text-sm font-medium bg-pastel-sage text-charcoal hover:bg-pastel-sage/80 transition-colors flex items-center gap-2"

@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
 
   if (isAuthRoute && user) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/editor";
+    redirectUrl.pathname = "/";
     return NextResponse.redirect(redirectUrl);
   }
 

@@ -23,7 +23,7 @@ export default function SignupPage() {
       password,
       options: {
         data: { full_name: fullName },
-        emailRedirectTo: `${location.origin}/editor`,
+        emailRedirectTo: `${location.origin}/`,
       },
     });
 

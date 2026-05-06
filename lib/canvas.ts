@@ -1,50 +1,78 @@
 import type { PhotoSlot } from "@/lib/types";
 
-const CANVAS_SIZE = 2000;
-const CELL_GAP = 2;
+/**
+ * Renders the entire poster grid into a high-resolution PNG blob.
+ * Target: ~300 DPI equivalent.
+ * We maximize resolution by keeping the largest dimension around 8000px,
+ * which is a safe limit for most modern browsers/devices.
+ */
+const MAX_SAFE_DIMENSION = 8000;
+const CELL_GAP = 4;
 
 export async function generatePosterPng(
   slots: PhotoSlot[],
   cols: number,
   rows: number
 ): Promise<Blob> {
-  const canvas = new OffscreenCanvas(CANVAS_SIZE, CANVAS_SIZE);
-  const ctx = canvas.getContext("2d");
+  const maxCells = Math.max(cols, rows);
+  const cellSize = Math.floor(
+    (MAX_SAFE_DIMENSION - (maxCells - 1) * CELL_GAP) / maxCells
+  );
+
+  const width = cols * cellSize + (cols - 1) * CELL_GAP;
+  const height = rows * cellSize + (rows - 1) * CELL_GAP;
+
+  const canvas = new OffscreenCanvas(width, height);
+  const ctx = canvas.getContext("2d", { alpha: false });
   if (!ctx) throw new Error("OffscreenCanvas 2D context unavailable");
 
-  ctx.fillStyle = "#F5F0E8";
-  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  // Background
+  ctx.fillStyle = "#F5F0E8"; // off-white
+  ctx.fillRect(0, 0, width, height);
 
-  const totalGapW = CELL_GAP * (cols - 1);
-  const totalGapH = CELL_GAP * (rows - 1);
-  const cellW = (CANVAS_SIZE - totalGapW) / cols;
-  const cellH = (CANVAS_SIZE - totalGapH) / rows;
-
+  // Render slots
   await Promise.all(
     slots.map(async (slot, index) => {
       if (!slot.previewUrl) return;
 
       const col = index % cols;
       const row = Math.floor(index / cols);
-      const x = col * (cellW + CELL_GAP);
-      const y = row * (cellH + CELL_GAP);
+      const x = col * (cellSize + CELL_GAP);
+      const y = row * (cellSize + CELL_GAP);
 
-      const img = await loadImageBitmap(slot.previewUrl);
+      try {
+        const img = await loadImageBitmap(slot.previewUrl);
 
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(x, y, cellW, cellH);
-      ctx.clip();
+        ctx.save();
+        // Clip to cell area
+        ctx.beginPath();
+        ctx.rect(x, y, cellSize, cellSize);
+        ctx.clip();
 
-      const coverScale = Math.max(cellW / img.width, cellH / img.height);
-      const drawW = img.width * coverScale * slot.zoom;
-      const drawH = img.height * coverScale * slot.zoom;
-      const drawX = x + (cellW - drawW) / 2 + slot.panX * coverScale;
-      const drawY = y + (cellH - drawH) / 2 + slot.panY * coverScale;
+        // Calculate "cover" scale
+        const coverScale = Math.max(
+          cellSize / img.width,
+          cellSize / img.height
+        );
+        
+        const baseW = img.width * coverScale;
+        const baseH = img.height * coverScale;
 
-      ctx.drawImage(img, drawX, drawY, drawW, drawH);
-      ctx.restore();
-      img.close();
+        const drawW = baseW * slot.zoom;
+        const drawH = baseH * slot.zoom;
+
+        const offsetX = (slot.panX / 100) * baseW * slot.zoom;
+        const offsetY = (slot.panY / 100) * baseH * slot.zoom;
+
+        const drawX = x + (cellSize - drawW) / 2 + offsetX;
+        const drawY = y + (cellSize - drawH) / 2 + offsetY;
+
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
+        ctx.restore();
+        img.close();
+      } catch (err) {
+        console.error(`Failed to load image for slot ${index}:`, err);
+      }
     })
   );
 
@@ -53,6 +81,7 @@ export async function generatePosterPng(
 
 async function loadImageBitmap(url: string): Promise<ImageBitmap> {
   const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch image: ${res.statusText}`);
   const blob = await res.blob();
   return createImageBitmap(blob);
 }

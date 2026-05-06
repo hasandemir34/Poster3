@@ -7,6 +7,7 @@ import { Modal } from "@/components/ui/Modal";
 import { AuthModal } from "@/components/ui/AuthModal";
 import { generatePosterPng } from "@/lib/canvas";
 import { createClient } from "@/lib/supabase/client";
+import { uploadPoster } from "@/lib/supabase/storage";
 import type { PhotoSlot, Product, AddressJson, CreateOrderResponse } from "@/lib/types";
 
 interface OrderButtonProps {
@@ -67,18 +68,7 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const fileName = `${user.id}/${Date.now()}.png`;
-      const { error: uploadError } = await supabase.storage
-        .from("posters")
-        .upload(fileName, blob, { contentType: "image/png" });
-
-      if (uploadError) throw uploadError;
-
-      const { data: urlData } = supabase.storage
-        .from("posters")
-        .getPublicUrl(fileName);
-
-      const printReadyUrl = urlData.publicUrl;
+      const printReadyUrl = await uploadPoster(user.id, blob);
 
       setStep("placing");
 
@@ -111,9 +101,9 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
     idle: "Sipariş Ver",
     auth: "Sipariş Ver",
     address: "Adres Onayla",
-    generating: "Baskı dosyası oluşturuluyor…",
-    uploading: "Yükleniyor…",
-    placing: "Sipariş veriliyor…",
+    generating: "Baskı dosyası hazırlanıyor...",
+    uploading: "Yükleniyor...",
+    placing: "Sipariş veriliyor...",
     done: "Sipariş alındı!",
     error: "Tekrar dene",
   };

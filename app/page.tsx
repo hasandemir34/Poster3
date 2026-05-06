@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { LogoutButton } from "@/components/ui/LogoutButton";
 import type { Product } from "@/lib/types";
 
 export default async function HomePage() {
@@ -21,12 +22,15 @@ export default async function HomePage() {
         </span>
         <div className="flex gap-3">
           {user ? (
-            <Link
-              href="/editor"
-              className="px-5 py-2 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 transition-opacity"
-            >
-              Editörü Aç
-            </Link>
+            <>
+              <LogoutButton />
+              <Link
+                href="/editor"
+                className="px-5 py-2 rounded-lg bg-charcoal text-off-white text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                Editörü Aç
+              </Link>
+            </>
           ) : (
             <>
               <Link
