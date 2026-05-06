@@ -46,10 +46,13 @@ export interface PhotoSlot {
   panY: number;
 }
 
+export type FrameOption = "none" | "black" | "white";
+
 export interface CreateOrderPayload {
   productId: string;
   printReadyUrl: string;
   addressJson: AddressJson;
+  frameOption: FrameOption;
 }
 
 export interface CreateOrderResponse {

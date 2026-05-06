@@ -8,11 +8,12 @@ import { AuthModal } from "@/components/ui/AuthModal";
 import { generatePosterPng } from "@/lib/canvas";
 import { createClient } from "@/lib/supabase/client";
 import { uploadPoster } from "@/lib/supabase/storage";
-import type { PhotoSlot, Product, AddressJson, CreateOrderResponse } from "@/lib/types";
+import type { PhotoSlot, Product, AddressJson, CreateOrderResponse, FrameOption } from "@/lib/types";
 
 interface OrderButtonProps {
   product: Product;
   slots: PhotoSlot[];
+  frameOption: FrameOption;
 }
 
 type Step =
@@ -33,7 +34,7 @@ const EMPTY_ADDRESS: AddressJson = {
   country: "TR",
 };
 
-export function OrderButton({ product, slots }: OrderButtonProps) {
+export function OrderButton({ product, slots, frameOption }: OrderButtonProps) {
   const router = useRouter();
   const [step, setStep] = useState<Step>("idle");
   const [address, setAddress] = useState<AddressJson>(EMPTY_ADDRESS);
@@ -99,6 +100,7 @@ export function OrderButton({ product, slots }: OrderButtonProps) {
           productId: product.id,
           printReadyUrl,
           addressJson: address,
+          frameOption,
         }),
       });
 

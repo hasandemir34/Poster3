@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import type { CreateOrderPayload, CreateOrderResponse } from "@/lib/types";
 
+const FRAME_PRICE = 100;
+
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
 
@@ -27,7 +29,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { productId, printReadyUrl, addressJson } = payload;
+  const { productId, printReadyUrl, addressJson, frameOption } = payload;
 
   if (!productId || !printReadyUrl || !addressJson) {
     return NextResponse.json<CreateOrderResponse>(
@@ -53,9 +55,11 @@ export async function POST(request: NextRequest) {
     .from("profiles")
     .upsert({ id: user.id, address_json: addressJson }, { onConflict: "id" });
 
+  const total = product.price + (frameOption && frameOption !== "none" ? FRAME_PRICE : 0);
+
   const { data: order, error: orderError } = await supabase
     .from("orders")
-    .insert({ user_id: user.id, total: product.price, status: "pending" })
+    .insert({ user_id: user.id, total, status: "pending" })
     .select("id")
     .single();
 

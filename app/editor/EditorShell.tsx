@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import type { Product, PhotoSlot } from "@/lib/types";
+import type { Product, PhotoSlot, FrameOption } from "@/lib/types";
 import { PosterGrid } from "@/components/editor/PosterGrid";
 import { OrderButton } from "@/components/editor/OrderButton";
 
@@ -19,9 +19,10 @@ function initSlots(count: number): PhotoSlot[] {
 
 interface EditorShellProps {
   product: Product;
+  frameOption: FrameOption;
 }
 
-export function EditorShell({ product }: EditorShellProps) {
+export function EditorShell({ product, frameOption }: EditorShellProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [slots, setSlots] = useState<PhotoSlot[]>(() =>
     initSlots(product.photo_count)
@@ -198,7 +199,7 @@ export function EditorShell({ product }: EditorShellProps) {
 
       <div className={`flex-none pt-2 pb-1 ${isZoomed ? "sticky bottom-0 bg-off-white/80 backdrop-blur-sm -mx-4 px-4 py-4 border-t border-gray-100 z-50" : ""}`}>
         <div className="flex justify-center">
-          <OrderButton product={product} slots={slots} />
+          <OrderButton product={product} slots={slots} frameOption={frameOption} />
         </div>
       </div>
     </div>

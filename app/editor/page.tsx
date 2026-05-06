@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { EditorShell } from "./EditorShell";
-import type { Product } from "@/lib/types";
+import type { Product, FrameOption } from "@/lib/types";
 
 const FALLBACK_PRODUCTS: Product[] = [
   { id: "classic", name: "Classic", price: 50, photo_count: 50, cols: 5 },
@@ -8,11 +8,13 @@ const FALLBACK_PRODUCTS: Product[] = [
 ];
 
 interface EditorPageProps {
-  searchParams: Promise<{ product?: string }>;
+  searchParams: Promise<{ product?: string; frame?: string }>;
 }
 
 export default async function EditorPage({ searchParams }: EditorPageProps) {
-  const { product: productId } = await searchParams;
+  const { product: productId, frame } = await searchParams;
+  const frameOption: FrameOption =
+    frame === "black" || frame === "white" ? frame : "none";
   const supabase = await createClient();
 
   const { data } = await supabase
@@ -28,7 +30,7 @@ export default async function EditorPage({ searchParams }: EditorPageProps) {
 
   return (
     <main className="bg-off-white">
-      <EditorShell product={selectedProduct} />
+      <EditorShell product={selectedProduct} frameOption={frameOption} />
     </main>
   );
 }

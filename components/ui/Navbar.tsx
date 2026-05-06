@@ -47,16 +47,6 @@ export async function Navbar({ backHref, backLabel }: NavbarProps) {
           {user ? (
             <>
               <Link
-                href="/editor"
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-charcoal hover:bg-cream transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Tasarla
-              </Link>
-
-              <Link
                 href="/orders"
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-muted hover:text-charcoal hover:bg-cream transition-colors"
               >
