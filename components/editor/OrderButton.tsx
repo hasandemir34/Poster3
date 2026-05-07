@@ -23,6 +23,7 @@ type Step =
   | "generating"
   | "uploading"
   | "placing"
+  | "payment_init"
   | "done"
   | "error";
 
@@ -104,13 +105,28 @@ export function OrderButton({ product, slots, frameOption }: OrderButtonProps) {
         }),
       });
 
-      if (!res.ok) {
-        const json: CreateOrderResponse = await res.json();
-        throw new Error(json.error ?? "Order failed");
-      }
+      const orderJson: CreateOrderResponse = await res.json().catch(() => {
+        throw new Error(`Sipariş API hatası (${res.status})`);
+      });
+      if (!res.ok) throw new Error(orderJson.error ?? "Sipariş oluşturulamadı");
 
-      setStep("done");
-      setTimeout(() => router.push("/"), 2500);
+      const { orderId } = orderJson;
+
+      setStep("payment_init");
+
+      const payRes = await fetch("/api/payment/initialize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+
+      const payJson = await payRes.json().catch(() => {
+        throw new Error(`Ödeme API hatası (${payRes.status})`);
+      });
+      if (!payRes.ok) throw new Error(payJson.error ?? "Ödeme başlatılamadı");
+
+      const { token } = payJson;
+      router.push(`/payment?token=${token}`);
     } catch (err) {
       setErrorMessage(
         err instanceof Error ? err.message : "Something went wrong"
@@ -125,12 +141,13 @@ export function OrderButton({ product, slots, frameOption }: OrderButtonProps) {
     address: "Adres Onayla",
     generating: "Baskı dosyası hazırlanıyor...",
     uploading: "Yükleniyor...",
-    placing: "Sipariş veriliyor...",
+    placing: "Sipariş oluşturuluyor...",
+    payment_init: "Ödeme sayfasına yönlendiriliyorsunuz...",
     done: "Sipariş alındı!",
     error: "Tekrar dene",
   };
 
-  const isProcessing = ["generating", "uploading", "placing"].includes(step);
+  const isProcessing = ["generating", "uploading", "placing", "payment_init"].includes(step);
 
   return (
     <>
