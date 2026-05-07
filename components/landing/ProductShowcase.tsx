@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { Product } from "@/lib/types";
+import type { Product, FrameOption } from "@/lib/types";
 
 interface ProductShowcaseProps {
   products: Product[];
@@ -137,7 +137,7 @@ export function ProductShowcase({ products }: ProductShowcaseProps) {
             ].map((option) => (
               <button
                 key={option.id}
-                onClick={() => setFrameOption(option.id as any)}
+                onClick={() => setFrameOption(option.id as FrameOption)}
                 className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${
                   frameOption === option.id
                     ? "bg-charcoal text-white shadow-lift"
@@ -195,7 +195,7 @@ export function ProductShowcase({ products }: ProductShowcaseProps) {
               </span>
             </summary>
             <div className="mt-4 text-sm text-muted leading-relaxed">
-              Tüm siparişler 2-3 iş günü içinde hazırlanır ve MNG Kargo ile Türkiye'nin her yerine ücretsiz gönderilir.
+              Tüm siparişler 2-3 iş günü içinde hazırlanır ve MNG Kargo ile Türkiye&apos;nin her yerine ücretsiz gönderilir.
             </div>
           </details>
         </div>

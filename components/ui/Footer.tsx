@@ -51,7 +51,7 @@ export function Footer() {
             © {new Date().getFullYear()} Framely. Tüm hakları saklıdır.
           </p>
           <div className="flex items-center gap-5">
-            <span className="text-xs text-muted/60">Türkiye'de üretildi 🇹🇷</span>
+            <span className="text-xs text-muted/60">Türkiye&apos;de üretildi 🇹🇷</span>
           </div>
         </div>
       </div>
