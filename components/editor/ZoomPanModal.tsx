@@ -40,6 +40,7 @@ export function ZoomPanModal({ slot, onClose, onSave, onRemove }: ZoomPanModalPr
       setPanX(slot.panX);
       setPanY(slot.panY);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slot?.slotIndex]);
 
   function handlePointerDown(e: React.PointerEvent) {

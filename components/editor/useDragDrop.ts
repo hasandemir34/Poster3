@@ -176,7 +176,7 @@ export function useDragDrop(
           }
         },
 
-        onDragEnd: (_: React.DragEvent) => {
+        onDragEnd: () => {
           setDragSourceIndex(null);
           setDragOverIndex(null);
           setGhostInfo(null);
@@ -198,7 +198,7 @@ export function useDragDrop(
           setDragOverIndex(slotIndex);
         },
 
-        onDragLeave: (_: React.DragEvent) => {
+        onDragLeave: () => {
           setDragOverIndex((prev) => (prev === slotIndex ? null : prev));
         },
 
@@ -275,7 +275,7 @@ export function useDragDrop(
           setDragOverIndex(overIdx);
         },
 
-        onTouchEnd: (_: React.TouchEvent) => {
+        onTouchEnd: () => {
           if (!touchDragRef.current) return;
 
           if (touchDragRef.current.longPressTimer) {
